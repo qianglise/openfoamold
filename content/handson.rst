@@ -761,18 +761,16 @@ This case uses OpenFOAM to calculate the wind fields around complex environments
 with unknown influence from e.g. irregular buildings, focusing on
 pedestrian-level wind (wind comfort) and wind loads on buildings,
 teaching key CFD skills like setting up Atmospheric Boundary Layer (ABL)
-conditions with `atmBoundaryLayer`XXXXXXXX, using `snappyHexMesh` for complex geometries,
-and applying solvers like `simpleFoam`XXXXXXXX to understand wind patterns,
+conditions with ``atmBoundaryLayer``XXXXXXXX, using ``snappyHexMesh`` for complex geometries,
+and applying solvers like ``simpleFoam``XXXXXXXX to understand wind patterns,
 recirculation zones, and pressure distributions.
-
-The initialization of the velocity field is set to XXXXXXX m/s with a user-speficied angle as well.
 
 
 .. code:: console
 
  $ cp -r  /PATH/XXXXXXstockholm .
 
-- The structure of the case is as follows:
+The structure of the case is as follows:
 
 .. code:: console
 
@@ -812,9 +810,10 @@ The initialization of the velocity field is set to XXXXXXX m/s with a user-spefi
       ├── snappyHexMeshDict
       └── streamlines
 
-The default setting is to run the application simpleFoam on 8 MPI-rank with
+The default setting is to run the application simpleFoam XXXXXXX on 8 MPI-rank with
 background mesh block of size XXXXXXXXXXX(20×8×8). The results are stored in 5 time steps
-100, 200, 300, 400 and 500.XXXXXXXXXXXX
+100, 200, 300, 400 and 500.XXXXXXXXXXXX The initialization of the velocity field is
+set to XXXXXXX m/s with a user-speficied angle as well.
 
 Run the case step by step
 +++++++++++++++++++++++++
@@ -832,13 +831,14 @@ Run the case step by step
  ls constant/geometry/building.obj
 
  # speficy flow direction
- The flow direction is speficed by entry `flowDir` in the file *0/include/ABLConditions*
+ The flow direction is speficed by entry ``flowDir`` in the file *0/include/ABLConditions*
  
-   .. code:: cpp
+.. code:: cpp
 
-    flowDir              (1 0 0); // Wind blowing in the positive X direction
+   flowDir              (1 0 0); // Wind blowing in the positive X direction
 
-
+.. code:: console
+	  
  # Create a block mesh first
  runApplication blockMesh
 
@@ -848,11 +848,12 @@ Run the case step by step
  # Run the snappyHexMesh in parallel
  runParallel snappyHexMesh
  
- # Run the solver for incompressible flow
+ # Run the solver
  runApplication $(getApplication)
 
  # Reconstruct fields of the parallel case from the latest time step
  runApplication reconstructPar -latestTime
+
 
 
 
