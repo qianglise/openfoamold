@@ -855,6 +855,50 @@ Run the case step by step
 
 
 
+
+
+
+
+
+
+Invoke the OpenFOAM environment if not
+
+.. code:: bash
+   source $FOAM_BASHRC
+   . $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+unset env variable
+.. code:: bash
+   unset FOAM_SIGFPE
+ 
+The obj file should be already placed under the directory ``constant/geometry``
+
+.. code:: bash
+   ls constant/geometry/building.obj
+
+Speficy flow direction in entry ``flowDir`` in the file **0/include/ABLConditions**
+ 
+.. code:: cpp
+
+   Uref                 4.522;   // Reference mean streamwise flow speed [m/s]
+   Zref                 51;      // Reference height [m]
+   zDir                 (0 0 1); // Ground-normal direction 
+   flowDir              (1 0 0); // Wind blowing in the positive X direction
+   z0                   uniform 1.8; // Surface roughness length [m] 
+   zGround              uniform 0.0;
+
+
+Create mesh, run the solver and reconstruct fields from the last time step
+.. code:: console
+   runApplication blockMesh # Create a block mesh first
+   runApplication decomposePar -copyZero # Decompose a mesh for parallelization
+   runParallel snappyHexMesh # Run the snappyHexMesh in parallel
+   runApplication $(getApplication) # Run the solver
+   runApplication reconstructPar -latestTime  # Reconstruct fields of the parallel case from the latest time step
+
+
+ 
+
 Parallelization
 +++++++++++++++
 
