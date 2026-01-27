@@ -827,11 +827,10 @@ Run the case step by step
  # unset env variable
  unset FOAM_SIGFPE
  
- # The obj file is already placed under the directory *constant/geometry*
+ # The obj file is already placed under the directory ``constant/geometry``
  ls constant/geometry/building.obj
 
- # speficy flow direction
- The flow direction is speficed by entry ``flowDir`` in the file *0/include/ABLConditions*
+ # speficy flow direction in entry ``flowDir`` in the file **0/include/ABLConditions**
  
 .. code:: cpp
 
