@@ -930,25 +930,44 @@ in the same file should be coordinately changed as well, for example:
 
 
  
-Turbulence modelling (optional)
+Turbulence modelling
 +++++++++++++++++++++++++++++++
 
 The need to increase spatial and temporal resolution becomes impractical
 as the flow comes into the turbulent regime, where problems of solution
-stability may also occur. Instead, Reynolds-averaged simulation (RAS) turbulence
-models are used to solve for the mean flow behaviour and calculate the
-statistics of the fluctuations. The standard k-epsilon model with wall
-functions will be used in this tutorial. Two extra variables are solved: :math:`k`, the
-turbulent kinetic energy, and :math:`\varepsilon`, the turbulent dissipation rate. 
-To setup the model you will need three additional files in the 0 directory: *nut*, 
-*k*, *epsilon*. Create them by making a copy of the *p* file, and then modify them 
-as needed.
+stability may also occur. Turbulence modelling includes a range of methods,
+e.g. Reynolds-averaged simulation (*RAS*) or large-eddy simulation (*LES*),
+that are provided in OpenFOAM. In most transient solvers, the choice of
+turbulence modelling method is selectable at run-time through
+the ``simulationType`` keyword specified in file *constant/turbulenceProperties*:
 
-A range of wall function models is available in OpenFOAM that are applied as
-boundary conditions on individual patches. This enables different wall function
-models to be applied to different wall regions. The choice of wall function
-models are specified through the turbulent viscosity field, nut, in the *0/nut*
-file:
+.. code:: cpp 
+
+ simulationType  RAS;
+
+ RAS
+ {
+    RASModel        realizableKE;
+
+    turbulence      on;
+
+    printCoeffs     on;
+ }
+
+
+With ``RAS`` selected in this case, the turbulence model is selected by
+the *RASModel* entry from a long list of available models.
+The ``realizableKE`` model with wall functions is selected in
+this tutorial which improves upon the standard ``k-Epsilon`` model.
+The user should also ensure that turbulence calculation is switched on.
+
+Due to the choice of the turbulence model, two extra variables are solved:
+namely :math:`k`, the turbulent kinetic energy, and :math:`\varepsilon`,
+the turbulent dissipation rate. To setup the model you will need three
+additional files in the *0* directory: *nut*, *k*, *epsilon*.
+One can create them by making a copy of the *p* file, and then modify them as needed.
+The choices of wall function models are specified through
+the turbulent viscosity field, *nut*, in the *0/nut* file:
 
 .. code:: cpp
 
@@ -958,56 +977,30 @@ file:
 
  boundaryField
  {
-    movingWall
+    ...
+    Wall
     {
-        type            nutkWallFunction;
+        type            nutkRoughWallFunction;
+	Ks		uniform 0.2; // Sand-grain roughness height 
+        Cs		uniform 0.5; // Roughness constant 
         value           uniform 0;
     }
-    fixedWalls
+    ground
     {
-        type            nutkWallFunction;
+        type            nutkRoughWallFunction;
+	Ks		uniform 1.8; // Sand-grain roughness height 
+	Cs		uniform 0.5; // Roughness constant 
         value           uniform 0;
     }
-    frontAndBack
-    {
-        type            empty;
-    }
+    ...
  }
 
 
-You should should now open the field files for *k* and *epsilon* ( in *0/k* and *0/epsilon*) 
-and set their boundary conditions. For a wall boundary condition wall, *epsilon* is assigned 
-an *epsilonWallFunction* boundary condition and a *kqRwallFunction* boundary condition is assigned to *k*.
-The latter is a generic boundary condition that can be applied to any field that are of a turbulent kinetic 
-energy type, e.g. *k*, *q* or  Reynolds Stress *R*. 
-
-
-Turbulence modelling includes a range of methods, e.g. *RAS* or large-eddy simulation (*LES*), that are 
-provided in OpenFOAM. In most transient solvers, the choice of turbulence modelling method is selectable 
-at run-time through the simulationType keyword in momentumTransport dictionary. The user can view this 
-file in the constant directory:
-
-.. code:: cpp 
-
- simulationType  RAS;
-
- RAS
- {
-    RASModel        kEpsilon;
-
-    turbulence      on;
-
-    printCoeffs     on;
- }
-
-The options for *simulationType* are *laminar*, *RAS* and *LES*. 
-More informaton on turbulence models can be found in the Extended Code Guide.
-With RAS selected in this case, the choice of *RAS* modelling is specified in 
-a turbulenceProperties subdictionary, also in the constant directory. 
-The turbulence model is selected by the *RASModel* entry from a long list of 
-available models that are listed in User Guide Table. The k-Epsilon model 
-should be selected which is is the standard k-epsilon 
-the user should also ensure that turbulence calculation is switched on.
+For a wall boundary condition, *epsilon* is assigned with an *epsilonWallFunction*
+and a *kqRwallFunction* boundary condition is assigned to *k*. The latter is
+a generic boundary condition that can be applied to any field that are of
+a turbulent kinetic energy type, e.g. *k*, *q* or  Reynolds Stress *R*. 
+More informaton on turbulence models can be found in the extended code guide.
 
 
 
