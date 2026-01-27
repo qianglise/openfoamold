@@ -749,3 +749,108 @@ It is easiest to work with Paraview on your own machine, but you can also use Te
 .. image:: img/motorbike_result.png
 
 
+
+
+
+
+
+Stockholm
+---------
+
+This case uses OpenFOAM to calculate the wind fields around complex environments
+with unknown influence from e.g. irregular buildings, focusing on
+pedestrian-level wind (wind comfort) and wind loads on buildings,
+teaching key CFD skills like setting up Atmospheric Boundary Layer (ABL)
+conditions with `atmBoundaryLayer`XXXXXXXX, using `snappyHexMesh` for complex geometries,
+and applying solvers like `simpleFoam`XXXXXXXX to understand wind patterns,
+recirculation zones, and pressure distributions.
+
+The initialization of the velocity field is set to XXXXXXX m/s with a user-speficied angle as well.
+
+
+.. code:: console
+
+ $ cp -r  /PATH/XXXXXXstockholm .
+
+- The structure of the case is as follows:
+
+.. code:: console
+
+ $ cd stockholm
+ $ ls
+ 0.orig Allclean Allrun constant system
+
+ $ tree -d 1 .   XXXXXXXXXX
+
+  .
+  ├── 0
+  │   ├── include
+  │   │   ├── fixedInlet
+  │   │   ├── frontBackUpperPatches
+  │   │   └── initialConditions
+  │   ├── k
+  │   ├── nut
+  │   ├── nuTilda
+  │   ├── p
+  │   └── U
+  ├── Allclean
+  ├── Allrun
+  ├── constant
+  │   ├── geometry
+  │   │   └── README
+  │   ├── momentumTransport
+  │   └── physicalProperties
+  └── system
+      ├── blockMeshDict
+      ├── controlDict
+      ├── cutPlane
+      ├── decomposeParDict
+      ├── forceCoeffs
+      ├── functions
+      ├── fvSchemes
+      ├── fvSolution
+      ├── snappyHexMeshDict
+      └── streamlines
+
+The default setting is to run the application simpleFoam on 8 MPI-rank with
+background mesh block of size XXXXXXXXXXX(20×8×8). The results are stored in 5 time steps
+100, 200, 300, 400 and 500.XXXXXXXXXXXX
+
+Run the case step by step
++++++++++++++++++++++++++
+
+.. code:: console
+
+ # invoke the OpenFOAM environment if not
+ source $FOAM_BASHRC
+ . $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+ # unset env variable
+ unset FOAM_SIGFPE
+ 
+ # The obj file is already placed under the directory *constant/geometry*
+ ls constant/geometry/building.obj
+
+ # speficy flow direction
+ The flow direction is speficed by entry `flowDir` in the file *0/include/ABLConditions*
+ 
+ .. code:: cpp
+
+  flowDir              (1 0 0); // Wind blowing in the positive X direction
+
+
+ # Create a block mesh first
+ runApplication blockMesh
+
+ # Decompose a mesh for parallelization
+ runApplication decomposePar -copyZero
+
+ # Run the snappyHexMesh in parallel
+ runParallel snappyHexMesh
+ 
+ # Run the solver for incompressible flow
+ runApplication $(getApplication)
+
+ # Reconstruct fields of the parallel case from the latest time step
+ runApplication reconstructPar -latestTime
+
