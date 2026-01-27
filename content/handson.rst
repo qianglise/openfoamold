@@ -765,7 +765,8 @@ conditions with ``atmBoundaryLayer``XXXXXXXX, using ``snappyHexMesh`` for comple
 and applying solvers like ``simpleFoam``XXXXXXXX to understand wind patterns,
 recirculation zones, and pressure distributions.
 
-
+.. image:: img/slb.png
+	   
 .. code:: console
 
  $ cp -r  /PATH/XXXXXXstockholm .
@@ -818,49 +819,6 @@ set to XXXXXXX m/s with a user-speficied angle as well.
 Run the case step by step
 +++++++++++++++++++++++++
 
-.. code:: bash
-
- # invoke the OpenFOAM environment if not
- source $FOAM_BASHRC
- . $WM_PROJECT_DIR/bin/tools/RunFunctions
-
- # unset env variable
- unset FOAM_SIGFPE
- 
- # The obj file is already placed under the directory ``constant/geometry``
- ls constant/geometry/building.obj
-
- # speficy flow direction in entry ``flowDir`` in the file **0/include/ABLConditions**
- 
-.. code:: cpp
-
-   flowDir              (1 0 0); // Wind blowing in the positive X direction
-
-.. code:: console
-	  
- # Create a block mesh first
- runApplication blockMesh
-
- # Decompose a mesh for parallelization
- runApplication decomposePar -copyZero
-
- # Run the snappyHexMesh in parallel
- runParallel snappyHexMesh
- 
- # Run the solver
- runApplication $(getApplication)
-
- # Reconstruct fields of the parallel case from the latest time step
- runApplication reconstructPar -latestTime
-
-
-
-
-
-
-
-
-
 Invoke the OpenFOAM environment if not
 
 .. code:: bash
@@ -880,7 +838,7 @@ The obj file should be already placed under the directory ``constant/geometry``
 	  
    ls constant/geometry/building.obj
 
-Speficy flow direction in entry ``flowDir`` in the file **0/include/ABLConditions**
+Speficy flow direction in entry ``flowDir`` in the file ``0/include/ABLConditions``
  
 .. code:: cpp
 
