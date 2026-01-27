@@ -864,16 +864,20 @@ Run the case step by step
 Invoke the OpenFOAM environment if not
 
 .. code:: bash
+	  
    source $FOAM_BASHRC
    . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 unset env variable
+
 .. code:: bash
+	  
    unset FOAM_SIGFPE
  
 The obj file should be already placed under the directory ``constant/geometry``
 
 .. code:: bash
+	  
    ls constant/geometry/building.obj
 
 Speficy flow direction in entry ``flowDir`` in the file **0/include/ABLConditions**
@@ -889,7 +893,9 @@ Speficy flow direction in entry ``flowDir`` in the file **0/include/ABLCondition
 
 
 Create mesh, run the solver and reconstruct fields from the last time step
+
 .. code:: console
+	  
    runApplication blockMesh # Create a block mesh first
    runApplication decomposePar -copyZero # Decompose a mesh for parallelization
    runParallel snappyHexMesh # Run the snappyHexMesh in parallel
@@ -903,28 +909,23 @@ Parallelization
 +++++++++++++++
 
 By default, 8 MPI ranks are used. One can change the number of MPI ranks
-and the decomposition method in file *system/decomposeParDict*, for example.
+and the decomposition method in file *system/decomposeParDict*.
 
 .. code:: cpp
 
  numberOfSubdomains 8; // MPI-rank
- method hierarchical;  // using hierarchical method for partition
+ method scotch;  // using scotch method for partition
 
 to
 
-.. code:: cpp
-
- numberOfSubdomains 24; // MPI-rank
- method scotch;         // using scotch method for partition
-
-Note: If you still used *method hierarchical*, the *hierarchicalCoeffs* in the
-file should be coordinately changed as well
+Note: If you use *method hierarchical*, the entry ``hierarchicalCoeffs``
+in the same file should be coordinately changed as well, for example:
 
 .. code:: cpp
 
  hierarchicalCoeffs
  {
- n (4 3 2); // 4x3x2 = 24 !!
+ n (2 2 2); // 2x2x2 = 8 !!
  } 
 
 
