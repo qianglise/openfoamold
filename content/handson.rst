@@ -856,7 +856,36 @@ Run the case step by step
 
 
 
+Parallelization
++++++++++++++++
 
+By default, 8 MPI ranks are used. One can change the number of MPI ranks
+and the decomposition method in file *system/decomposeParDict*, for example.
+
+.. code:: cpp
+
+ numberOfSubdomains 8; // MPI-rank
+ method hierarchical;  // using hierarchical method for partition
+
+to
+
+.. code:: cpp
+
+ numberOfSubdomains 24; // MPI-rank
+ method scotch;         // using scotch method for partition
+
+Note: If you still used *method hierarchical*, the *hierarchicalCoeffs* in the
+file should be coordinately changed as well
+
+.. code:: cpp
+
+ hierarchicalCoeffs
+ {
+ n (4 3 2); // 4x3x2 = 24 !!
+ } 
+
+
+ 
 
 
 
