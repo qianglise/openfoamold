@@ -818,7 +818,7 @@ set to XXXXXXX m/s with a user-speficied angle as well.
 Run the case step by step
 +++++++++++++++++++++++++
 
-.. code:: console
+.. code:: bash
 
  # invoke the OpenFOAM environment if not
  source $FOAM_BASHRC
@@ -885,10 +885,89 @@ file should be coordinately changed as well
 
 
  
+Turbulence modelling (optional)
++++++++++++++++++++++++++++++++
+
+The need to increase spatial and temporal resolution becomes impractical
+as the flow comes into the turbulent regime, where problems of solution
+stability may also occur. Instead, Reynolds-averaged simulation (RAS) turbulence
+models are used to solve for the mean flow behaviour and calculate the
+statistics of the fluctuations. The standard k-epsilon model with wall
+functions will be used in this tutorial. Two extra variables are solved: :math:`k`, the
+turbulent kinetic energy, and :math:`\varepsilon`, the turbulent dissipation rate. 
+To setup the model you will need three additional files in the 0 directory: *nut*, 
+*k*, *epsilon*. Create them by making a copy of the *p* file, and then modify them 
+as needed.
+
+A range of wall function models is available in OpenFOAM that are applied as
+boundary conditions on individual patches. This enables different wall function
+models to be applied to different wall regions. The choice of wall function
+models are specified through the turbulent viscosity field, nut, in the *0/nut*
+file:
+
+.. code:: cpp
+
+ dimensions      [0 2 -1 0 0 0 0];
+
+ internalField   uniform 0;
+
+ boundaryField
+ {
+    movingWall
+    {
+        type            nutkWallFunction;
+        value           uniform 0;
+    }
+    fixedWalls
+    {
+        type            nutkWallFunction;
+        value           uniform 0;
+    }
+    frontAndBack
+    {
+        type            empty;
+    }
+ }
+
+
+You should should now open the field files for *k* and *epsilon* ( in *0/k* and *0/epsilon*) 
+and set their boundary conditions. For a wall boundary condition wall, *epsilon* is assigned 
+an *epsilonWallFunction* boundary condition and a *kqRwallFunction* boundary condition is assigned to *k*.
+The latter is a generic boundary condition that can be applied to any field that are of a turbulent kinetic 
+energy type, e.g. *k*, *q* or  Reynolds Stress *R*. 
+
+
+Turbulence modelling includes a range of methods, e.g. *RAS* or large-eddy simulation (*LES*), that are 
+provided in OpenFOAM. In most transient solvers, the choice of turbulence modelling method is selectable 
+at run-time through the simulationType keyword in momentumTransport dictionary. The user can view this 
+file in the constant directory:
+
+.. code:: cpp 
+
+ simulationType  RAS;
+
+ RAS
+ {
+    RASModel        kEpsilon;
+
+    turbulence      on;
+
+    printCoeffs     on;
+ }
+
+The options for *simulationType* are *laminar*, *RAS* and *LES*. 
+More informaton on turbulence models can be found in the Extended Code Guide.
+With RAS selected in this case, the choice of *RAS* modelling is specified in 
+a turbulenceProperties subdictionary, also in the constant directory. 
+The turbulence model is selected by the *RASModel* entry from a long list of 
+available models that are listed in User Guide Table. The k-Epsilon model 
+should be selected which is is the standard k-epsilon 
+the user should also ensure that turbulence calculation is switched on.
 
 
 
- Lid-driven cavity flow
+
+Lid-driven cavity flow
 ----------------------------
 
 This case uses OpenFOAM to calculate the incompressible flow in a two-dimensional square domain, see the Figure below:
