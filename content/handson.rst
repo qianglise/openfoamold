@@ -847,7 +847,7 @@ Speficy flow direction in entry ``flowDir`` in the file ``0/include/ABLCondition
    zDir                 (0 0 1); // Ground-normal direction 
    flowDir              (1 0 0); // Wind blowing in the positive X direction
    z0                   uniform 1.8; // Surface roughness length [m] 
-   zGround              uniform 0.0;
+   zGround              uniform 0.0; // Displacement height [m]
 
 
 Create mesh, run the solver and reconstruct fields from the last time step
