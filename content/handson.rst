@@ -894,7 +894,7 @@ Speficy flow direction in entry ``flowDir`` in the file **0/include/ABLCondition
 
 Create mesh, run the solver and reconstruct fields from the last time step
 
-.. code:: console
+.. code:: bash
 	  
    runApplication blockMesh # Create a block mesh first
    runApplication decomposePar -copyZero # Decompose a mesh for parallelization
@@ -996,8 +996,8 @@ the turbulent viscosity field, *nut*, in the *0/nut* file:
  }
 
 
-For a wall boundary condition, *epsilon* is assigned with an *epsilonWallFunction*
-and a *kqRwallFunction* boundary condition is assigned to *k*. The latter is
+For a wall boundary condition, *epsilon* is assigned with an ``epsilonWallFunction``
+and a ``kqRwallFunction`` boundary condition is assigned to *k*. The latter is
 a generic boundary condition that can be applied to any field that are of
 a turbulent kinetic energy type, e.g. *k*, *q* or  Reynolds Stress *R*. 
 More informaton on turbulence models can be found in the extended code guide.
