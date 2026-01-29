@@ -761,12 +761,17 @@ This case uses OpenFOAM to calculate the wind fields around complex environments
 with unknown influence from e.g. irregular buildings, focusing on
 pedestrian-level wind (wind comfort) and wind loads on buildings,
 teaching key CFD skills like setting up Atmospheric Boundary Layer (ABL)
-conditions with ``atmBoundaryLayer``XXXXXXXX, using ``snappyHexMesh`` for complex geometries,
-and applying solvers like ``simpleFoam``XXXXXXXX to understand wind patterns,
+conditions, using ``snappyHexMesh`` for complex geometries,
+and applying solvers to understand wind patterns,
 recirculation zones, and pressure distributions.
 
 .. image:: img/slb.png
 	   
+Run the case step by step
++++++++++++++++++++++++++
+
+Let us copy the case from the repository
+
 .. code:: console
 
  $ cp -r  /PATH/XXXXXXstockholm .
@@ -777,7 +782,7 @@ The structure of the case is as follows:
 
  $ cd stockholm
  $ ls
- 0.orig Allclean Allrun constant system
+ 0 Allclean Allrun constant system
 
  $ tree -d 1 .   XXXXXXXXXX
 
@@ -811,15 +816,13 @@ The structure of the case is as follows:
       ├── snappyHexMeshDict
       └── streamlines
 
-The default setting is to run the application simpleFoam XXXXXXX on 8 MPI-rank with
-background mesh block of size XXXXXXXXXXX(20×8×8). The results are stored in 5 time steps
-100, 200, 300, 400 and 500.XXXXXXXXXXXX The initialization of the velocity field is
+The default setting is to run the application on 8 MPI-rank with
+background mesh block of size XXXXXXXXXXX(40×40×40), and results will be 
+stored at the last time step 1000. The initialization of the velocity field is
 set to XXXXXXX m/s with a user-speficied angle as well.
 
-Run the case step by step
-+++++++++++++++++++++++++
 
-Invoke the OpenFOAM environment if not
+Invoke the OpenFOAM environment
 
 .. code:: bash
 	  
