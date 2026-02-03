@@ -83,7 +83,7 @@ stored at the last time step 1000. The initialization of the velocity field is
 set to XXXXXXX m/s with a user-speficied angle as well.
 
 
-Invoke the OpenFOAM environment
+Start by invoking the OpenFOAM environment
 
 .. code:: bash
 	  
@@ -96,11 +96,11 @@ unset env variable
 	  
    unset FOAM_SIGFPE
  
-The obj file for the buildings should be already placed under the directory *constant/geometry*
+The obj file for the buildings should be already placed under the directory *constant/triSurface*
 
 .. code:: bash
 	  
-   ls constant/geometry/building.obj
+   ls constant/triSurface/buildings.obj
 
 
 Copy the original boundary conditions to a *0* time directory
@@ -116,16 +116,17 @@ for more detail. Once all the boundary conditions are set, create the mesh
 by using ``blockMesh`` and followed by ``snappyHexMesh`` for the mesh refinement.
 
 .. code:: bash
-	  
+
+   runApplication surfacefeature # recommended for creating high-quality meshes
    runApplication blockMesh # Create a block mesh first
    runApplication decomposePar -copyZero # Decompose a mesh for parallelization
-   runParallel snappyHexMesh # Run the snappyHexMesh in parallel
+   runParallel snappyHexMesh -overwrite # Run the snappyHexMesh in parallel
 
 
 Running the solver with the default setup of the domain decomposition and turbulence modelling.
-For more details on parallelization and turbulence modelling, see section
-`Parallelization <https://qianglise.github.io/openfoamold/handson/#parallelization>`__ and
-`Turbulence modelling <https://qianglise.github.io/openfoamold/handson/#turbulence-modelling>`__  below.
+See sections `Parallelization <https://qianglise.github.io/openfoamold/handson/#parallelization>`__ and
+`Turbulence modelling <https://qianglise.github.io/openfoamold/handson/#turbulence-modelling>`__  below
+ for more details.
 
 .. code:: bash
 	  
@@ -136,7 +137,7 @@ During the run, one should check whether the simulation is ok by inspecting the 
 
 .. code:: bash
 	  
-   tail -n 15  log.foamRun
+   tail -n 20  log.foamRun
    ...
    Time = 1000s
 
