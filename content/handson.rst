@@ -796,7 +796,6 @@ The structure of the case is as follows:
  │   └── p
  ├── Allclean
  ├── Allrun
- ├── README
  ├── constant
  │   ├── transportProperties 
  │   ├── triSurface
@@ -839,7 +838,7 @@ The obj file should be already placed under the directory ``constant/geometry``
    ls constant/geometry/building.obj
 
 
-Copy the original boundary conditions to a 0 time directory
+Copy the original boundary conditions to a ``0`` time directory
 
 .. code:: bash
 	  
@@ -867,14 +866,14 @@ Create the mesh by using ``blockMesh`` and followed by ``snappyHexMesh`` for the
    runParallel snappyHexMesh # Run the snappyHexMesh in parallel
 
 
-Running the solver with the default setup of the domain decomposition and parallelization
+Running the solver with the default setup of the domain decomposition and parallelization.
 
 .. code:: bash
 	  
    runApplication $(getApplication)
 
 
-During the run, one should check the simulation is ok by inspecting the log file
+During the run, one should check whether the simulation is ok by inspecting the log file
 
 .. code:: bash
 	  
@@ -896,7 +895,7 @@ During the run, one should check the simulation is ok by inspecting the log file
 
 
    
-Once the run is finished, the fields are reconstructed from the last time step for visualization
+Once the run is finished, the fields are reconstructed from the last time step for post-processing
 
 .. code:: bash
 	  
