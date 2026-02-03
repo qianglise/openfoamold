@@ -123,10 +123,21 @@ by using ``blockMesh`` and followed by ``snappyHexMesh`` for the mesh refinement
    runParallel snappyHexMesh -overwrite # Run the snappyHexMesh in parallel
 
 
-Running the solver with the default setup of the domain decomposition and turbulence modelling.
+Some stuff worth noting here:
+
+- Here, we have to provide the ``-copyZero`` flag, so that the *0* folder is
+  simply copied to the processor directories without change. Otherwise,
+  some stuff will be "optimized away", for example entries for boundaries
+  that are not found in the mesh. 
+- Running ``surfaceFeatures`` is not strictly necessary but it is highly recommended
+  and often necessary for creating high-quality meshes in ``snappyHexMesh``
+  when dealing with complex, sharp-edged geometries.
+
+
+Next step, run the solver with the default setup of the domain decomposition and turbulence modelling.
 See sections `Parallelization <https://qianglise.github.io/openfoamold/handson/#parallelization>`__ and
-`Turbulence modelling <https://qianglise.github.io/openfoamold/handson/#turbulence-modelling>`__  below
- for more details.
+`Turbulence modelling <https://qianglise.github.io/openfoamold/handson/#turbulence-modelling>`__
+below for more details about changing the default setup.
 
 .. code:: bash
 	  
