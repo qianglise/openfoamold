@@ -865,6 +865,40 @@ Create mesh, run the solver and reconstruct fields from the last time step
 
 
  
+Boundary conditions
++++++++++++++++++++++++++++++++
+
+The inlet and wall boundary conditions are set according to the following table
+
+.. list-table:: 
+      :widths: 25 25 25 25
+      :header-rows: 1
+
+      * - Type
+        - Inlet
+        - Outlet
+        - Wall	  
+      * - U
+        - atmBoundaryLayerInletVelocity + ABLConditons
+        - zeroGradient
+        - uniformFixedValue
+      * - k
+        - fixedValue
+        - inletOutlet
+        - kqRWallFunction	  
+      * - epsilon
+        - fixedValue
+        - inletOutlet	  
+        - epsilonWallFunction
+      * - p
+        - zeroGradient
+        - totalPressure
+        - zeroGradient	  
+      * - nut
+        - calculated
+        - calculated
+        - nutkRoughWallFunction
+
 
 Parallelization
 +++++++++++++++
