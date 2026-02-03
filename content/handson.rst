@@ -111,7 +111,8 @@ Copy the original boundary conditions to a *0* time directory
 
    
 At this stage, one could modify various boundary/inflow conditions if necessary.
-See section XXXXXX for more detail. Once all the boundary conditions are set, create the mesh
+See section `Boundary conditions <https://qianglise.github.io/openfoamold/handson/#boundary-conditions>`__
+for more detail. Once all the boundary conditions are set, create the mesh
 by using ``blockMesh`` and followed by ``snappyHexMesh`` for the mesh refinement.
 
 .. code:: bash
@@ -122,7 +123,9 @@ by using ``blockMesh`` and followed by ``snappyHexMesh`` for the mesh refinement
 
 
 Running the solver with the default setup of the domain decomposition and turbulence modelling.
-For more details on parallelization and turbulence modelling, see section XXXXX below.
+For more details on parallelization and turbulence modelling, see section
+`Parallelization <https://qianglise.github.io/openfoamold/handson/#parallelization>`__ and
+`Turbulence modelling <https://qianglise.github.io/openfoamold/handson/#turbulence-modelling>`__  below.
 
 .. code:: bash
 	  
