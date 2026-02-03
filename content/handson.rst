@@ -400,7 +400,7 @@ Notice that OpenFOAM cases are not backward compatible, please always copy cases
  $ ls
  0.orig Allclean Allrun constant system
 
- $ tree -d 1 .
+ $ tree
 
  ├── 0.orig (time directory starting with T=0, initial conditions)
  │   ├── include
@@ -782,39 +782,36 @@ The structure of the case is as follows:
 
  $ cd stockholm
  $ ls
- 0 Allclean Allrun constant system
+ 0.orig Allclean Allrun constant system
 
- $ tree -d 1 .   XXXXXXXXXX
+ $ tree
+ .
+ ├── 0.orig (time directory starting with T=0, initial conditions)
+ │   ├── U
+ │   ├── epsilon
+ │   ├── include
+ │   │   └── ABLConditions
+ │   ├── k (turbulence kenetic energy)
+ │   ├── nut (turbulence viscosity)
+ │   └── p
+ ├── Allclean
+ ├── Allrun
+ ├── README
+ ├── constant
+ │   ├── transportProperties 
+ │   ├── triSurface
+ │   │   └── buildings.obj (actual building model)
+ │   └── turbulenceProperties
+ └── system
+     ├── blockMeshDict
+     ├── controlDict (the main dictionary for controlling the simulation)
+     ├── decomposeParDict (dictionary for partitioning up the space into smaller chunks)
+     ├── fvSchemes
+     ├── fvSolution
+     ├── meshQualityDict
+     ├── snappyHexMeshDict
+     └── surfaceFeatureExtractDict
 
-  .
-  ├── 0
-  │   ├── include
-  │   │   ├── fixedInlet
-  │   │   ├── frontBackUpperPatches
-  │   │   └── initialConditions
-  │   ├── k
-  │   ├── nut
-  │   ├── nuTilda
-  │   ├── p
-  │   └── U
-  ├── Allclean
-  ├── Allrun
-  ├── constant
-  │   ├── geometry
-  │   │   └── README
-  │   ├── momentumTransport
-  │   └── physicalProperties
-  └── system
-      ├── blockMeshDict
-      ├── controlDict
-      ├── cutPlane
-      ├── decomposeParDict
-      ├── forceCoeffs
-      ├── functions
-      ├── fvSchemes
-      ├── fvSolution
-      ├── snappyHexMeshDict
-      └── streamlines
 
 The default setting is to run the application on 8 MPI-rank with
 background mesh block of size XXXXXXXXXXX(40×40×40), and results will be 
@@ -861,22 +858,57 @@ Speficy flow direction in entry ``flowDir`` in the file ``0/include/ABLCondition
    zGround              uniform 0.0; // Displacement height [m]
 
 
-Create mesh, run the solver and reconstruct fields from the last time step
+Create the mesh by using ``blockMesh`` and followed by ``snappyHexMesh`` for the mesh refinement.
 
 .. code:: bash
 	  
    runApplication blockMesh # Create a block mesh first
    runApplication decomposePar -copyZero # Decompose a mesh for parallelization
    runParallel snappyHexMesh # Run the snappyHexMesh in parallel
-   runApplication $(getApplication) # Run the solver
-   runApplication reconstructPar -latestTime  # Reconstruct fields of the parallel case from the latest time step
 
 
- 
+Running the solver with the default setup of the domain decomposition and parallelization
+
+.. code:: bash
+	  
+   runApplication $(getApplication)
+
+
+During the run, one should check the simulation is ok by inspecting the log file
+
+.. code:: bash
+	  
+   tail -n 15  log.foamRun
+   ...
+   Time = 1000s
+
+   smoothSolver:  Solving for Ux, Initial residual = 0.000211037, Final residual = 6.49593e-06, No Iterations 2
+   smoothSolver:  Solving for Uy, Initial residual = 0.000128834, Final residual = 3.66066e-06, No Iterations 2
+   smoothSolver:  Solving for Uz, Initial residual = 0.00404797, Final residual = 0.000126481, No Iterations 2
+   GAMG:  Solving for p, Initial residual = 0.0411125, Final residual = 0.00133303, No Iterations 2
+   time step continuity errors : sum local = 3.51157e-06, global = 3.31387e-07, cumulative = 0.000189408
+   smoothSolver:  Solving for epsilon, Initial residual = 0.000736789, Final residual = 3.01329e-05, No Iterations 1
+   smoothSolver:  Solving for k, Initial residual = 0.000747849, Final residual = 3.96933e-05, No Iterations 1
+   bounding k, min: -0.13863 max: 2.26486 average: 0.18759
+   ExecutionTime = 1836.11 s  ClockTime = 1843 s
+   
+   End
+
+
+   
+Once the run is finished, the fields are reconstructed from the last time step for visualization
+
+.. code:: bash
+	  
+   runApplication reconstructPar -latestTime
+   
+
+
 Boundary conditions
 +++++++++++++++++++++++++++++++
 
-The inlet and wall boundary conditions are set according to the following table
+The inlet and wall boundary conditions are set according to the following table,
+while the top of the domain is set to a ``symmetry`` condition
 
 .. list-table:: 
       :widths: 25 30 20 20
