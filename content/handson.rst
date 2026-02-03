@@ -831,33 +831,23 @@ unset env variable
 	  
    unset FOAM_SIGFPE
  
-The obj file should be already placed under the directory ``constant/geometry``
+The obj file for the buildings should be already placed under the directory *constant/geometry*
 
 .. code:: bash
 	  
    ls constant/geometry/building.obj
 
 
-Copy the original boundary conditions to a ``0`` time directory
+Copy the original boundary conditions to a *0* time directory
 
 .. code:: bash
 	  
    cp -r 0.orig 0
 
-
-Speficy flow direction in entry ``flowDir`` in the file ``0/include/ABLConditions``
- 
-.. code:: cpp
-
-   Uref                 4.522;   // Reference mean streamwise flow speed [m/s]
-   Zref                 51;      // Reference height [m]
-   zDir                 (0 0 1); // Ground-normal direction 
-   flowDir              (1 0 0); // Wind blowing in the positive X direction
-   z0                   uniform 1.8; // Surface roughness length [m] 
-   zGround              uniform 0.0; // Displacement height [m]
-
-
-Create the mesh by using ``blockMesh`` and followed by ``snappyHexMesh`` for the mesh refinement.
+   
+At this stage, one could modify various boundary/inflow conditions if necessary.
+See section XXXXXX for more detail. Once all the boundary conditions are set, create the mesh
+by using ``blockMesh`` and followed by ``snappyHexMesh`` for the mesh refinement.
 
 .. code:: bash
 	  
@@ -866,7 +856,8 @@ Create the mesh by using ``blockMesh`` and followed by ``snappyHexMesh`` for the
    runParallel snappyHexMesh # Run the snappyHexMesh in parallel
 
 
-Running the solver with the default setup of the domain decomposition and parallelization.
+Running the solver with the default setup of the domain decomposition and turbulence modelling.
+For more details on parallelization and turbulence modelling, see section XXXXX below.
 
 .. code:: bash
 	  
@@ -904,7 +895,7 @@ Once the run is finished, the fields are reconstructed from the last time step f
 
 
 Boundary conditions
-+++++++++++++++++++++++++++++++
++++++++++++++++++++
 
 The inlet and wall boundary conditions are set according to the following table,
 while the top of the domain is set to a ``symmetry`` condition
@@ -938,7 +929,22 @@ while the top of the domain is set to a ``symmetry`` condition
         - calculated
         - nutkRoughWallFunction
 
+	  
+To speficy flow direction, one need to change the entry ``flowDir`` in the file *0/include/ABLConditions*
+ 
+.. code:: cpp
 
+   Uref                 4.522;   // Reference mean streamwise flow speed [m/s]
+   Zref                 51;      // Reference height [m]
+   zDir                 (0 0 1); // Ground-normal direction 
+   flowDir              (1 0 0); // Wind blowing in the positive X direction
+   z0                   uniform 1.8; // Surface roughness length [m] 
+   zGround              uniform 0.0; // Displacement height [m]
+
+
+
+
+	  
 Parallelization
 +++++++++++++++
 
@@ -952,7 +958,7 @@ and the decomposition method in file *system/decomposeParDict*.
 
 to
 
-Note: If you use *method hierarchical*, the entry ``hierarchicalCoeffs``
+Note: If you use ``method hierarchical``, the entry ``hierarchicalCoeffs``
 in the same file should be coordinately changed as well, for example:
 
 .. code:: cpp
@@ -990,7 +996,7 @@ the ``simulationType`` keyword specified in file *constant/turbulenceProperties*
 
 
 With ``RAS`` selected in this case, the turbulence model is selected by
-the *RASModel* entry from a long list of available models.
+the ``RASModel`` entry from a long list of available models.
 The ``realizableKE`` model with wall functions is selected in
 this tutorial which improves upon the standard ``k-Epsilon`` model.
 The user should also ensure that turbulence calculation is switched on.
