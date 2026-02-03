@@ -841,6 +841,14 @@ The obj file should be already placed under the directory ``constant/geometry``
 	  
    ls constant/geometry/building.obj
 
+
+Copy the original boundary conditions to a 0 time directory
+
+.. code:: bash
+	  
+   cp -r 0.orig 0
+
+
 Speficy flow direction in entry ``flowDir`` in the file ``0/include/ABLConditions``
  
 .. code:: cpp
@@ -871,7 +879,7 @@ Boundary conditions
 The inlet and wall boundary conditions are set according to the following table
 
 .. list-table:: 
-      :widths: 25 25 25 25
+      :widths: 25 30 20 20
       :header-rows: 1
 
       * - Type
