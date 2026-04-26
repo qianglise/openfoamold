@@ -160,3 +160,5 @@ Except where otherwise noted, the example programs and other software provided
 by ENCCS are made available under the `OSI <http://opensource.org/>`_-approved
 `MIT license <http://opensource.org/licenses/mit-license.html>`_.
 
+ 
+.. figure:: img/eurohpc.png 
